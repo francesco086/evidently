@@ -30,13 +30,14 @@ OPTIMAL_POINTS = 150
 
 
 def plot_distr(
-    *, hist_curr: HistogramData, hist_ref: Optional[HistogramData] = None, orientation="v", color_options: ColorOptions
+    *, hist_curr: HistogramData, hist_ref: Optional[HistogramData] = None, orientation="v", color_options: ColorOptions,
+    current_bar_name: str = "current", reference_bar_name: str = "reference"
 ) -> go.Figure:
     fig = go.Figure()
 
     fig.add_trace(
         go.Bar(
-            name="current",
+            name=current_bar_name,
             x=hist_curr.x,
             y=hist_curr.count,
             marker_color=color_options.get_current_data_color(),
@@ -47,7 +48,7 @@ def plot_distr(
     if hist_ref is not None:
         fig.add_trace(
             go.Bar(
-                name="reference",
+                name=reference_bar_name,
                 x=hist_ref.x,
                 y=hist_ref.count,
                 marker_color=color_options.get_reference_data_color(),
@@ -121,13 +122,13 @@ def plot_distr_with_perc_button(
 
     if is_subplots:
         cols = 2
-        subplot_titles = ["current", "reference"]
+        subplot_titles = ["currentA", "referenceA"]
     fig = make_subplots(rows=1, cols=cols, shared_yaxes=True, subplot_titles=subplot_titles)
 
-    fig = add_traces_with_perc(fig, hist_curr, 1, 1, curr_color, "current")
+    fig = add_traces_with_perc(fig, hist_curr, 1, 1, curr_color, "currentB")
     fig.update_xaxes(title_text=xaxis_name, row=1, col=1)
     if hist_ref is not None:
-        fig = add_traces_with_perc(fig, hist_ref, 1, int(is_subplots) + 1, ref_color, "reference")
+        fig = add_traces_with_perc(fig, hist_ref, 1, int(is_subplots) + 1, ref_color, "referenceB")
         fig.update_xaxes(title_text=xaxis_name, row=1, col=2)
         visible += [True, False]
 
@@ -162,9 +163,9 @@ def plot_distr_with_cond_perc_button(
 ):
     fig = make_subplots(rows=1, cols=1)
     visible = [True, False]
-    fig = add_traces_with_perc(fig, hist_curr, 1, 1, color_options.get_current_data_color(), "current")
+    fig = add_traces_with_perc(fig, hist_curr, 1, 1, color_options.get_current_data_color(), "currentC")
     if hist_ref is not None:
-        fig = add_traces_with_perc(fig, hist_ref, 1, 1, color_options.get_reference_data_color(), "reference")
+        fig = add_traces_with_perc(fig, hist_ref, 1, 1, color_options.get_reference_data_color(), "referenceC")
         visible += [True, False]
     lines = []
     left_line: Optional[float] = None
@@ -285,6 +286,8 @@ def plot_distr_with_log_button(
     ref_data: Optional[HistogramData],
     ref_data_log: Optional[HistogramData],
     color_options: ColorOptions,
+    current_bar_name: str = "current",
+    reference_bar_name: str = "reference",
 ):
     traces = []
     visible = [True, False]
@@ -293,7 +296,7 @@ def plot_distr_with_log_button(
             x=curr_data.x,
             y=curr_data.count,
             marker_color=color_options.get_current_data_color(),
-            name="current",
+            name=current_bar_name,
         )
     )
     traces.append(
@@ -302,7 +305,7 @@ def plot_distr_with_log_button(
             y=curr_data_log.count,
             visible=False,
             marker_color=color_options.get_current_data_color(),
-            name="current",
+            name=current_bar_name,
         )
     )
     if ref_data is not None:
@@ -311,7 +314,7 @@ def plot_distr_with_log_button(
                 x=ref_data.x,
                 y=ref_data.count,
                 marker_color=color_options.get_reference_data_color(),
-                name="reference",
+                name=reference_bar_name,
             )
         )
         visible.append(True)
@@ -322,7 +325,7 @@ def plot_distr_with_log_button(
                     y=ref_data_log.count,
                     visible=False,
                     marker_color=color_options.get_reference_data_color(),
-                    name="reference",
+                    name=reference_bar_name,
                 )
             )
             visible.append(False)
@@ -379,7 +382,7 @@ def plot_num_feature_in_time(
             if not transpose
             else curr_data.sort_values(datetime_name)[datetime_name],
             line=dict(color=color_options.get_current_data_color(), shape="spline"),
-            name="current",
+            name="currentF",
         )
     )
     if ref_data is not None:
@@ -392,7 +395,7 @@ def plot_num_feature_in_time(
                 if not transpose
                 else ref_data.sort_values(datetime_name)[datetime_name],
                 line=dict(color=color_options.get_reference_data_color(), shape="spline"),
-                name="reference",
+                name="referenceF",
             )
         )
     if not transpose:
@@ -414,7 +417,7 @@ def plot_time_feature_distr(current: HistogramData, reference: Optional[Histogra
             x=curr_data["x"],
             y=curr_data["count"],
             line=dict(color=color_options.get_current_data_color(), shape="spline"),
-            name="current",
+            name="currentG",
         )
     )
     if reference is not None:
@@ -425,7 +428,7 @@ def plot_time_feature_distr(current: HistogramData, reference: Optional[Histogra
                 x=ref_data["x"],
                 y=ref_data["count"],
                 line=dict(color=color_options.get_reference_data_color(), shape="spline"),
-                name="reference",
+                name="referenceG",
             )
         )
     fig.update_layout(legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1))
@@ -515,7 +518,7 @@ def plot_boxes(
         upperfence=curr_for_plots["maxs"],
         x=curr_for_plots["values"] if not transpose else None,
         y=curr_for_plots["values"] if transpose else None,
-        name="current",
+        name="currentH",
         marker_color=color_options.get_current_data_color(),
         orientation="v" if not transpose else "h",
     )
@@ -529,7 +532,7 @@ def plot_boxes(
             upperfence=ref_for_plots["maxs"],
             x=ref_for_plots["values"] if not transpose else None,
             y=ref_for_plots["values"] if transpose else None,
-            name="reference",
+            name="referenceH",
             marker_color=color_options.get_reference_data_color(),
             orientation="v" if not transpose else "h",
         )
@@ -588,7 +591,7 @@ def plot_cat_cat_rel(
     subplot_titles: Union[list, str] = ""
     if ref is not None:
         cols = 2
-        subplot_titles = ["current", "reference"]
+        subplot_titles = ["currentI", "referenceI"]
     fig = make_subplots(rows=1, cols=cols, shared_yaxes=True, subplot_titles=subplot_titles)
     visible = []
     for i, val in enumerate(curr[target_name].astype(str).unique()):
@@ -663,7 +666,7 @@ def plot_num_num_rel(
         y=curr[target_name],
         mode="markers",
         marker_color=color_options.get_current_data_color(),
-        name="current",
+        name="currentL",
     )
     fig.add_trace(trace, 1, 1)
     fig.update_xaxes(title_text=column_name, row=1, col=1)
@@ -673,7 +676,7 @@ def plot_num_num_rel(
             y=ref[target_name],
             mode="markers",
             marker_color=color_options.get_reference_data_color(),
-            name="reference",
+            name="referenceL",
         )
         fig.add_trace(trace, 1, 2)
         fig.update_xaxes(title_text=column_name, row=1, col=2)
@@ -779,7 +782,7 @@ def plot_scatter(
         y=curr[y],
         mode="markers",
         marker_color=color_options.get_current_data_color(),
-        name="current",
+        name="currentM",
     )
     fig.add_trace(trace, 1, 1)
     fig.update_xaxes(title_text=xaxis_name, row=1, col=1)
@@ -789,7 +792,7 @@ def plot_scatter(
             y=ref[y],
             mode="markers",
             marker_color=color_options.get_reference_data_color(),
-            name="reference",
+            name="referenceM",
         )
         fig.add_trace(trace, 1, 2)
         fig.update_xaxes(title_text=xaxis_name, row=1, col=2)
@@ -813,7 +816,7 @@ def plot_pred_actual_time(
 
     if ref is not None:
         cols = 2
-        subplot_titles = ["current", "reference"]
+        subplot_titles = ["currentN", "referenceN"]
 
     fig = make_subplots(rows=1, cols=cols, shared_yaxes=True, subplot_titles=subplot_titles)
     for name, color in zip(
@@ -876,7 +879,7 @@ def plot_line_in_time(
 
     if ref is not None:
         cols = 2
-        subplot_titles = ["current", "reference"]
+        subplot_titles = ["currentO", "referenceO"]
 
     fig = make_subplots(rows=1, cols=cols, shared_yaxes=True, subplot_titles=subplot_titles)
     trace = go.Scatter(
@@ -978,7 +981,7 @@ def plot_scatter_for_data_drift(
 def plot_conf_mtrx(curr_mtrx, ref_mtrx):
     if ref_mtrx is not None:
         cols = 2
-        subplot_titles = ["current", "reference"]
+        subplot_titles = ["currentP", "referenceP"]
     else:
         cols = 1
         subplot_titles = [""]
@@ -1038,7 +1041,7 @@ def plot_contour_single(z1: np.ndarray, z2: Optional[np.ndarray], xtitle: str = 
     color_options = ColorOptions()
     if z2 is not None:
         cols = 2
-        subplot_titles = ["current", "reference"]
+        subplot_titles = ["currentQ", "referenceQ"]
     else:
         cols = 1
         subplot_titles = [""]
@@ -1046,7 +1049,7 @@ def plot_contour_single(z1: np.ndarray, z2: Optional[np.ndarray], xtitle: str = 
     trace = go.Contour(
         z=z1,
         line_width=1,
-        name="current",
+        name="currentR",
         showscale=False,
         showlegend=True,
         colorscale=[[0, "white"], [1, color_options.get_current_data_color()]],
@@ -1058,7 +1061,7 @@ def plot_contour_single(z1: np.ndarray, z2: Optional[np.ndarray], xtitle: str = 
         trace = go.Contour(
             z=z2,
             line_width=1,
-            name="reference",
+            name="referenceR",
             showscale=False,
             showlegend=True,
             colorscale=[[0, "white"], [1, color_options.get_reference_data_color()]],
@@ -1073,7 +1076,7 @@ def plot_contour(curr_contour: ContourData, ref_contour: Optional[ContourData], 
     color_options = ColorOptions()
     if ref_contour is not None:
         cols = 2
-        subplot_titles = ["current", "reference"]
+        subplot_titles = ["currentS", "referenceS"]
     else:
         cols = 1
         subplot_titles = [""]
@@ -1084,7 +1087,7 @@ def plot_contour(curr_contour: ContourData, ref_contour: Optional[ContourData], 
         x=x1,
         y=y1,
         line_width=1,
-        name="current",
+        name="currentT",
         showscale=False,
         showlegend=True,
         colorscale=[[0, "white"], [1, color_options.get_current_data_color()]],
@@ -1099,7 +1102,7 @@ def plot_contour(curr_contour: ContourData, ref_contour: Optional[ContourData], 
             x=x2,
             y=y2,
             line_width=1,
-            name="reference",
+            name="referenceT",
             showscale=False,
             showlegend=True,
             colorscale=[[0, "white"], [1, color_options.get_reference_data_color()]],
@@ -1119,7 +1122,7 @@ def plot_top_error_contours(
     color_options = ColorOptions()
     if ref_contour is not None:
         cols = 2
-        subplot_titles = ["current", "reference"]
+        subplot_titles = ["currentU", "referenceU"]
     else:
         cols = 1
         subplot_titles = [""]
@@ -1345,7 +1348,7 @@ def plot_agg_line_data(
 
     if ref_data is not None:
         cols = 2
-        subplot_titles = ["current", "reference"]
+        subplot_titles = ["currentV", "referenceV"]
 
     fig = make_subplots(rows=1, cols=cols, shared_yaxes=True, subplot_titles=subplot_titles)
     curr_traces = collect_traces(curr_data, line, std, color_options, True, line_name)
@@ -1371,7 +1374,7 @@ def plot_metric_k(curr_data: pd.Series, ref_data: Optional[pd.Series], yaxis_nam
 
     if ref_data is not None:
         cols = 2
-        subplot_titles = ["current", "reference"]
+        subplot_titles = ["currentZ", "referenceZ"]
 
     fig = make_subplots(rows=1, cols=cols, shared_yaxes=True, subplot_titles=subplot_titles)
     fig.add_trace(go.Scatter(x=curr_data.index, y=curr_data, marker_color=color_options.get_current_data_color()), 1, 1)
@@ -1397,7 +1400,7 @@ def plot_bias(
     subplot_titles: Union[list, str] = ""
     if ref is not None:
         cols = 2
-        subplot_titles = ["current", "reference"]
+        subplot_titles = ["currentK", "referenceK"]
     fig = make_subplots(rows=1, cols=cols, shared_yaxes=True, subplot_titles=subplot_titles)
     trace = go.Bar(
         x=curr.x,
@@ -1459,7 +1462,7 @@ def plot_4_distr(
     subplot_titles: Union[list, str] = ""
     if ref_1 is not None:
         cols = 2
-        subplot_titles = ["current", "reference"]
+        subplot_titles = ["currentW", "referenceW"]
     fig = make_subplots(rows=1, cols=cols, shared_yaxes=True, subplot_titles=subplot_titles)
     trace = go.Bar(
         x=curr_1.x,

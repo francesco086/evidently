@@ -313,7 +313,7 @@ class DataDriftTableRenderer(MetricRenderer):
             table_columns.append(ColumnDefinition("Reference feature importance", "reference_feature_importance"))
         table_columns = table_columns + [
             ColumnDefinition(
-                "Reference Distribution",
+                f"{self._lbl_reference} Distribution",
                 "reference_distribution",
                 ColumnType.HISTOGRAM,
                 options={
@@ -323,7 +323,7 @@ class DataDriftTableRenderer(MetricRenderer):
                 },
             ),
             ColumnDefinition(
-                "Current Distribution",
+                f"{self._lbl_current} Distribution",
                 "current_distribution",
                 ColumnType.HISTOGRAM,
                 options={

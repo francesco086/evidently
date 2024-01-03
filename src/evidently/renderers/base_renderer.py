@@ -22,6 +22,9 @@ if TYPE_CHECKING:
 
 class BaseRenderer:
     """Base class for all renderers"""
+    
+    _lbl_reference = "MyReferee"
+    _lbl_current = "MyCorrente"
 
     color_options: ColorOptions
 

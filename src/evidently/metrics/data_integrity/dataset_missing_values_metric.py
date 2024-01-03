@@ -268,14 +268,14 @@ class DatasetMissingValuesMetricRenderer(MetricRenderer):
     def _get_overall_missing_values_info(self, metric_result: DatasetMissingValuesMetricResult) -> BaseWidgetInfo:
         counters = [
             CounterData.string(
-                "Missing values (Current data)",
+                f"Missing values ({self._lbl_current} data)",
                 self._get_info_string(metric_result.current),
             ),
         ]
         if metric_result.reference is not None:
             counters.append(
                 CounterData.string(
-                    "Missing values (Reference data)",
+                    f"Missing values ({self._lbl_reference} data)",
                     self._get_info_string(metric_result.reference),
                 ),
             )
@@ -290,10 +290,10 @@ class DatasetMissingValuesMetricRenderer(MetricRenderer):
         result = [
             header_text(label="Dataset Missing Values"),
             self._get_overall_missing_values_info(metric_result),
-            self._get_table_stat(dataset_name="current", stats=metric_result.current),
+            self._get_table_stat(dataset_name=self._lbl_current, stats=metric_result.current),
         ]
 
         if metric_result.reference is not None:
-            result.append(self._get_table_stat(dataset_name="reference", stats=metric_result.reference))
+            result.append(self._get_table_stat(dataset_name=self._lbl_reference, stats=metric_result.reference))
 
         return result

@@ -215,9 +215,9 @@ class ColumnMissingValuesMetricRenderer(MetricRenderer):
         if metric_result.reference is not None:
             tables = widget_tabs(
                 tabs=[
-                    TabData(title="Current dataset", widget=current_table),
+                    TabData(title="Current datasetY", widget=current_table),
                     TabData(
-                        title="Reference dataset",
+                        title="Reference datasetY",
                         widget=self._get_table_stat(metric_result.reference),
                     ),
                 ]

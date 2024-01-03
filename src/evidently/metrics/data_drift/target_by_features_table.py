@@ -293,7 +293,7 @@ class TargetByFeaturesTableRenderer(MetricRenderer):
         ]
 
     def _get_regression_fig(self, feature_name: str, main_column: str, curr_data: pd.DataFrame, ref_data: pd.DataFrame):
-        fig = make_subplots(rows=1, cols=2, subplot_titles=("Current", "Reference"), shared_yaxes=True)
+        fig = make_subplots(rows=1, cols=2, subplot_titles=("CurrentA2", "ReferenceA2"), shared_yaxes=True)
         fig.add_trace(
             go.Scattergl(
                 x=curr_data[feature_name],

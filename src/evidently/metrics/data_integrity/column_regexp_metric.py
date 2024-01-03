@@ -145,7 +145,7 @@ class ColumnRegExpMetricRenderer(MetricRenderer):
         ]
         return counter(
             counters=counters,
-            title=f"{dataset_name.capitalize()} dataset",
+            title=f"{dataset_name.capitalize()} datasetYO",
         )
 
     @staticmethod
@@ -162,20 +162,20 @@ class ColumnRegExpMetricRenderer(MetricRenderer):
 
         result = [
             header_text(label=f"RegExp Match for column '{column_name}'."),
-            self._get_counters("current", metric_result.current),
+            self._get_counters("currentAA", metric_result.current),
         ]
 
         if metric_result.reference is not None:
-            result.append(self._get_counters("reference", metric_result.reference))
+            result.append(self._get_counters("referenceAA", metric_result.reference))
 
-        current_table = self._get_table_stat("current", metric_result.top, metric_result.current)
+        current_table = self._get_table_stat("currentAB", metric_result.top, metric_result.current)
 
         if metric_result.reference is not None:
             tables_tabs = [
-                TabData(title="Current dataset", widget=current_table),
+                TabData(title="Current datasetX", widget=current_table),
                 TabData(
-                    title="Reference dataset",
-                    widget=self._get_table_stat("reference", metric_result.top, metric_result.reference),
+                    title="Reference datasetX",
+                    widget=self._get_table_stat("referenceAB", metric_result.top, metric_result.reference),
                 ),
             ]
             tables = widget_tabs(tabs=tables_tabs)
