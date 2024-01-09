@@ -353,6 +353,8 @@ class ColumnDriftMetricRenderer(MetricRenderer):
                     color_options=self.color_options,
                     return_json=False,
                     line_name="reference (mean)",
+                    current_label=self._lbl_current,
+                    reference_label=self._lbl_reference,
                 )
             tabs.append(TabData("DATA DRIFT", plotly_figure(title="", figure=scatter_fig)))
 
@@ -367,6 +369,8 @@ class ColumnDriftMetricRenderer(MetricRenderer):
                 color_options=self.color_options,
                 subplots=False,
                 to_json=False,
+                current_label=self._lbl_current,
+                reference_label=self._lbl_reference,
             )
             tabs.append(TabData("DATA DISTRIBUTION", plotly_figure(title="", figure=distr_fig)))
 

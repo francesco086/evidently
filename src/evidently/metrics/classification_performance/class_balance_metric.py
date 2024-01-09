@@ -65,6 +65,8 @@ class ClassificationClassBalanceRenderer(MetricRenderer):
             yaxis_name_perc="Percent",
             same_color=True,
             color_options=self.color_options,
+            current_label=self._lbl_current,
+            reference_label=self._lbl_reference,
         )
 
         return [

@@ -167,6 +167,8 @@ class SerendipityMetricRenderer(MetricRenderer):
             color_options=self.color_options,
             subplots=False,
             to_json=False,
+            current_label=self._lbl_current,
+            reference_label=self._lbl_reference,
         )
 
         return [

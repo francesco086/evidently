@@ -653,6 +653,8 @@ class ColumnSummaryMetricRenderer(MetricRenderer):
                         metric_result.plot_data.data_by_target.contour_data.get("reference5"),
                         column_name,
                         target_name,
+                        current_label=self._lbl_current,
+                        reference_label=self._lbl_reference,
                     )
                     feature_by_target_figure = json.loads(feature_by_target_figure.to_json())
             if column_type == "cat" and target_type == "cat":

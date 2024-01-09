@@ -127,6 +127,8 @@ class TextDescriptorsDistributionRenderer(MetricRenderer):
                 color_options=self.color_options,
                 subplots=False,
                 to_json=False,
+                current_label=self._lbl_current,
+                reference_label=self._lbl_reference,
             )
             # distr_fig = get_distribution_plot_figure(
             #     current_distribution=metric_result.current[col],

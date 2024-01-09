@@ -206,6 +206,8 @@ class ColumnInteractionPlotRenderer(MetricRenderer):
                     metric_result.reference_contour,
                     obj.x_column,
                     obj.y_column,
+                    current_label=self._lbl_current,
+                    reference_label=self._lbl_reference,
                 )
                 fig = json.loads(fig.to_json())
         elif (

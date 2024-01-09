@@ -227,6 +227,8 @@ class ColumnValuePlotRenderer(MetricRenderer):
             xaxis_name_ref=None,
             yaxis_name=column_name + " value",
             color_options=self.color_options,
+            current_label=self._lbl_current,
+            reference_label=self._lbl_reference,
         )
 
         return [

@@ -226,6 +226,8 @@ class DataDriftTableRenderer(MetricRenderer):
                         color_options=self.color_options,
                         return_json=False,
                         line_name="reference (mean)",
+                        current_label=self._lbl_current,
+                        reference_label=self._lbl_reference,
                     )
                 scatter = plotly_figure(title="", figure=scatter_fig)
                 details.with_part("DATA DRIFT", info=scatter)
@@ -239,6 +241,8 @@ class DataDriftTableRenderer(MetricRenderer):
                 color_options=self.color_options,
                 subplots=False,
                 to_json=False,
+                current_label=self._lbl_current,
+                reference_label=self._lbl_reference,
             )
             distribution = plotly_figure(title="", figure=fig)
             details.with_part("DATA DISTRIBUTION", info=distribution)

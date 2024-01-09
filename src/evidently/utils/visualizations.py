@@ -107,6 +107,8 @@ def plot_distr_with_perc_button(
     color_options: ColorOptions,
     subplots: bool = True,
     to_json: bool = True,
+    current_label: str = "current",
+    reference_label: str = "reference",
 ):
     if not same_color:
         curr_color = color_options.get_current_data_color()
@@ -122,7 +124,7 @@ def plot_distr_with_perc_button(
 
     if is_subplots:
         cols = 2
-        subplot_titles = ["currentA", "referenceA"]
+        subplot_titles = [current_label, reference_label]
     fig = make_subplots(rows=1, cols=cols, shared_yaxes=True, subplot_titles=subplot_titles)
 
     fig = add_traces_with_perc(fig, hist_curr, 1, 1, curr_color, "currentB")
@@ -1072,11 +1074,11 @@ def plot_contour_single(z1: np.ndarray, z2: Optional[np.ndarray], xtitle: str = 
     return fig
 
 
-def plot_contour(curr_contour: ContourData, ref_contour: Optional[ContourData], xtitle: str = "", ytitle: str = ""):
+def plot_contour(curr_contour: ContourData, ref_contour: Optional[ContourData], xtitle: str = "", ytitle: str = "", current_label: str = "current", reference_label: str = "reference"):
     color_options = ColorOptions()
     if ref_contour is not None:
         cols = 2
-        subplot_titles = ["currentS", "referenceS"]
+        subplot_titles = [current_label, reference_label]
     else:
         cols = 1
         subplot_titles = [""]
@@ -1087,7 +1089,7 @@ def plot_contour(curr_contour: ContourData, ref_contour: Optional[ContourData], 
         x=x1,
         y=y1,
         line_width=1,
-        name="currentT",
+        name=current_label,
         showscale=False,
         showlegend=True,
         colorscale=[[0, "white"], [1, color_options.get_current_data_color()]],
@@ -1102,7 +1104,7 @@ def plot_contour(curr_contour: ContourData, ref_contour: Optional[ContourData], 
             x=x2,
             y=y2,
             line_width=1,
-            name="referenceT",
+            name=reference_label,
             showscale=False,
             showlegend=True,
             colorscale=[[0, "white"], [1, color_options.get_reference_data_color()]],
@@ -1118,11 +1120,13 @@ def plot_top_error_contours(
     ref_contour: Optional[Dict[str, ContourData]],
     xtitle: str = "",
     ytitle: str = "",
+    current_label: str = "current",
+    reference_label: str = "reference",
 ):
     color_options = ColorOptions()
     if ref_contour is not None:
         cols = 2
-        subplot_titles = ["currentU", "referenceU"]
+        subplot_titles = [current_label, reference_label]
     else:
         cols = 1
         subplot_titles = [""]
@@ -1342,13 +1346,15 @@ def plot_agg_line_data(
     color_options: ColorOptions,
     return_json: bool = True,
     line_name: Optional[str] = None,
+    current_label: str = "current",
+    reference_label: str = "reference",
 ):
     cols = 1
     subplot_titles: Union[list, str] = ""
 
     if ref_data is not None:
         cols = 2
-        subplot_titles = ["currentV", "referenceV"]
+        subplot_titles = [current_label, reference_label]
 
     fig = make_subplots(rows=1, cols=cols, shared_yaxes=True, subplot_titles=subplot_titles)
     curr_traces = collect_traces(curr_data, line, std, color_options, True, line_name)

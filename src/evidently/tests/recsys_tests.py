@@ -324,6 +324,8 @@ class BaseNotRankRecsysTestRenderer(TestRenderer):
             color_options=self.color_options,
             subplots=False,
             to_json=False,
+            current_label=self._lbl_current,
+            reference_label=self._lbl_reference,
         )
         info.with_details("", plotly_figure(figure=fig, title=""))
         return info
@@ -593,6 +595,8 @@ class TestPopularityBiasRenderer(TestRenderer):
             color_options=self.color_options,
             subplots=False,
             to_json=False,
+            current_label=self._lbl_current,
+            reference_label=self._lbl_reference,
         )
         info.with_details("", plotly_figure(figure=distr_fig, title=""))
         return info
