@@ -71,7 +71,7 @@ class SparkDataDriftTable(SparkMetricImplementation[DataDriftTable]):
 
         if self.metric.get_options().render_options.raw_data:
             raise NotImplementedError("SparkEngine do not support raw_data=True")
-
+        
         result = get_drift_for_columns(
             current_data=data.current_data,
             reference_data=data.reference_data,

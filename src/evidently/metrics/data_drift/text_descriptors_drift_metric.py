@@ -164,6 +164,8 @@ class DataDriftTableRenderer(MetricRenderer):
                     y_name=data.column_name,
                     x_name=data.scatter.x_name,
                     color_options=self.color_options,
+                    current_label=self._lbl_current,
+                    reference_label=self._lbl_reference,
                 )
             else:
                 scatter_fig = plot_agg_line_data(
@@ -176,7 +178,7 @@ class DataDriftTableRenderer(MetricRenderer):
                     yaxis_name=f"{data.column_name} (mean +/- std)",
                     color_options=self.color_options,
                     return_json=False,
-                    line_name="reference (mean)",
+                    line_name=f"{self._lbl_reference} (mean)",
                     current_label=self._lbl_current,
                     reference_label=self._lbl_reference,
                 )

@@ -210,7 +210,7 @@ def get_one_column_drift(
                 column_name,
                 datetime_column_name,
             )
-            current_scatter["current (mean)"] = df
+            current_scatter["current (mean) 1"] = df
             if prefix is None:
                 x_name = "Index binned"
             else:

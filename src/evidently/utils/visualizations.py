@@ -932,7 +932,8 @@ def plot_line_in_time(
 
 
 def plot_scatter_for_data_drift(
-    curr_y: list, curr_x: list, y0: float, y1: float, y_name: str, x_name: str, color_options: ColorOptions
+    curr_y: list, curr_x: list, y0: float, y1: float, y_name: str, x_name: str, color_options: ColorOptions,
+    current_label: str = "current", reference_label: str = "reference"
 ):
     fig = go.Figure()
 
@@ -946,7 +947,7 @@ def plot_scatter_for_data_drift(
             fill="toself",
             fillcolor=color_options.fill_color,
             opacity=0.5,
-            name="reference (+/- 1std)",
+            name=f"{reference_label} (+/- 1std)",
             line=dict(color=color_options.fill_color, width=0, dash="solid"),
             marker=dict(size=0),
         )
@@ -956,7 +957,7 @@ def plot_scatter_for_data_drift(
             x=curr_x,
             y=curr_y,
             mode="markers",
-            name="Current",
+            name=current_label,
             marker=dict(size=6, color=color_options.get_current_data_color()),
         )
     )
@@ -967,7 +968,7 @@ def plot_scatter_for_data_drift(
             y=[(y0 + y1) / 2] * len(curr_x),
             mode="lines",
             marker_color=color_options.zero_line_color,
-            name="reference (mean)",
+            name=f"{reference_label} (mean)",
         )
     )
 
@@ -1255,14 +1256,14 @@ def get_traces(df, color, error_band_opacity, name, showlegend):
     return error_band_trace, line_trace
 
 
-def rect_trace(line, std, min_value, max_value, color):
+def rect_trace(line, std, min_value, max_value, color, reference_label: str = "reference"):
     return go.Scatter(
         x=[min_value, max_value, max_value, min_value],
         y=[line + std, line + std, line - std, line - std],
         fill="toself",
         fillcolor=color,
         opacity=0.5,
-        name="reference (+/- 1std)",
+        name=f"{reference_label} (+/- 1std)",
         line=dict(color=color, width=0, dash="solid"),
         marker=dict(size=0),
     )
@@ -1275,6 +1276,7 @@ def collect_traces(
     color_options: ColorOptions,
     showlegend: bool,
     line_name: Optional[str] = None,
+    reference_label: str = "reference",
 ):
     name = list(data.keys())[0]
     traces = []
@@ -1289,7 +1291,7 @@ def collect_traces(
         )
         traces.append(green_line_trace)
     if std is not None and line is not None:
-        trace_rect = rect_trace(line, std, data[name]["per"].min(), data[name]["per"].max(), color_options.fill_color)
+        trace_rect = rect_trace(line, std, data[name]["per"].min(), data[name]["per"].max(), color_options.fill_color, reference_label=reference_label)
         traces.append(trace_rect)
     if len(data.keys()) == 1:
         error_band_trace, line_trace = get_traces(
@@ -1357,11 +1359,11 @@ def plot_agg_line_data(
         subplot_titles = [current_label, reference_label]
 
     fig = make_subplots(rows=1, cols=cols, shared_yaxes=True, subplot_titles=subplot_titles)
-    curr_traces = collect_traces(curr_data, line, std, color_options, True, line_name)
+    curr_traces = collect_traces(curr_data, line, std, color_options, True, line_name, reference_label=reference_label)
     for trace in curr_traces:
         fig.add_trace(trace, 1, 1)
     if ref_data is not None:
-        ref_traces = collect_traces(ref_data, line, std, color_options, False)
+        ref_traces = collect_traces(ref_data, line, std, color_options, False, reference_label=reference_label)
         for trace in ref_traces:
             fig.add_trace(trace, 1, 2)
         fig.update_xaxes(title_text=xaxis_name_ref, row=1, col=2)

@@ -10,12 +10,12 @@ from evidently.metric_preset import (
     DataQualityPreset,
     ClassificationPreset,
     RegressionPreset,
+    TargetDriftPreset
 )
 from evidently.report import Report
 from pytest import fixture
 from sklearn import datasets
 
-# ClassificationPreset.__name__,
 # TargetDriftPreset.__name__,
 # TextOverviewPreset.__name__,
 # RecsysPreset.__name__,
@@ -55,6 +55,39 @@ def test_regression_preset(openml_data: Tuple[pd.DataFrame, pd.DataFrame], tmp_d
     column_mapping = ColumnMapping()
     column_mapping.target = 'hours-per-week'
     column_mapping.prediction = 'random-hours-per-week'
+
+    report.run(reference_data=adult_ref, current_data=adult_cur, column_mapping=column_mapping)
+    report.save_html((tmp_dir / "data_stability.html").as_posix())
+
+    assert "MyReferee" in (tmp_dir / "data_stability.html").read_text()
+    assert "MyCorrente" in (tmp_dir / "data_stability.html").read_text()
+    assert "Reference " not in (tmp_dir / "data_stability.html").read_text()
+    assert "Current " not in (tmp_dir / "data_stability.html").read_text()
+    
+    
+def test_classification_preset(openml_data: Tuple[pd.DataFrame, pd.DataFrame], tmp_dir: Path) -> None:
+    adult_ref, adult_cur = openml_data
+    report = Report(metrics=[ClassificationPreset()])
+    
+    column_mapping = ColumnMapping()
+    column_mapping.target = 'hours-per-week'
+    column_mapping.prediction = 'random-hours-per-week'
+
+    report.run(reference_data=adult_ref, current_data=adult_cur, column_mapping=column_mapping)
+    report.save_html((tmp_dir / "data_stability.html").as_posix())
+
+    assert "MyReferee" in (tmp_dir / "data_stability.html").read_text()
+    assert "MyCorrente" in (tmp_dir / "data_stability.html").read_text()
+    assert "Reference " not in (tmp_dir / "data_stability.html").read_text()
+    assert "Current " not in (tmp_dir / "data_stability.html").read_text()
+
+
+def test_target_drift_preset(openml_data: Tuple[pd.DataFrame, pd.DataFrame], tmp_dir: Path) -> None:
+    adult_ref, adult_cur = openml_data
+    report = Report(metrics=[TargetDriftPreset()])
+    
+    column_mapping = ColumnMapping()
+    column_mapping.target = 'hours-per-week'
 
     report.run(reference_data=adult_ref, current_data=adult_cur, column_mapping=column_mapping)
     report.save_html((tmp_dir / "data_stability.html").as_posix())
