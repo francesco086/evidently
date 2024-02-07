@@ -263,7 +263,7 @@ class RegressionQualityMetricRenderer(MetricRenderer):
         result = [
             header_text(label=f"Regression Model Performance. Target: '{target_name}’"),
             counter(
-                title="Current: Model Quality (+/- std)",
+                title=f"{self._lbl_current}: Model Quality (+/- std)",
                 counters=[
                     CounterData(
                         "ME",
@@ -286,7 +286,7 @@ class RegressionQualityMetricRenderer(MetricRenderer):
         if metric_result.reference is not None:
             result.append(
                 counter(
-                    title="Reference: Model Quality (+/- std)",
+                    title=f"{self._lbl_reference}: Model Quality (+/- std)",
                     counters=[
                         CounterData(
                             "ME",

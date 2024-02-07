@@ -150,7 +150,7 @@ class ColumnValuePlotRenderer(MetricRenderer):
                 x=curr_x,
                 y=current_scatter[column_name],
                 mode="markers",
-                name="Current",
+                name=self._lbl_current,
                 marker=dict(size=6, color=color_options.get_current_data_color()),
             )
         )
@@ -159,7 +159,7 @@ class ColumnValuePlotRenderer(MetricRenderer):
                 x=ref_x,
                 y=column,
                 mode="markers",
-                name="Reference",
+                name=self._lbl_reference,
                 marker=dict(size=6, color=color_options.get_reference_data_color()),
             )
         )
@@ -171,7 +171,7 @@ class ColumnValuePlotRenderer(MetricRenderer):
                 x=[x0, x0],
                 y=[y0, y1],
                 mode="markers",
-                name="Current",
+                name=self._lbl_current,
                 marker=dict(size=0.01, color=color_options.non_visible_color, opacity=0.005),
                 showlegend=False,
             )
@@ -200,7 +200,7 @@ class ColumnValuePlotRenderer(MetricRenderer):
                 ),
                 dict(
                     type="line",
-                    name="Reference",
+                    name=self._lbl_reference,
                     xref="paper",
                     yref="y",
                     x0=0,  # min(testset_agg_by_date.index),
@@ -227,6 +227,8 @@ class ColumnValuePlotRenderer(MetricRenderer):
             xaxis_name_ref=None,
             yaxis_name=column_name + " value",
             color_options=self.color_options,
+            current_label=self._lbl_current,
+            reference_label=self._lbl_reference,
         )
 
         return [

@@ -251,15 +251,15 @@ class TextDomainClassifierDriftMetricRenderer(MetricRenderer):
             reference_table_examples = self._get_table_stat("reference", metric_result, content_type="examples")
 
             tables_tabs = [
-                TabData(title="Current dataset", widget=current_table_words),
-                TabData(title="Reference dataset", widget=reference_table_words),
+                TabData(title="Current datasetZ1", widget=current_table_words),
+                TabData(title="Reference datasetZ1", widget=reference_table_words),
             ]
             tables = widget_tabs(tabs=tables_tabs)
             result.append(tables)
 
             tables_tabs = [
-                TabData(title="Current dataset", widget=current_table_examples),
-                TabData(title="Reference dataset", widget=reference_table_examples),
+                TabData(title="Current datasetZ2", widget=current_table_examples),
+                TabData(title="Reference datasetZ2", widget=reference_table_examples),
             ]
             tables = widget_tabs(tabs=tables_tabs)
             result.append(tables)

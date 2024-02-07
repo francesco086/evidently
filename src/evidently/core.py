@@ -96,6 +96,7 @@ def np_array_valudator(value):
 
 
 class BaseResult(BaseModel):
+    
     class Config(BaseConfig):
         arbitrary_types_allowed = True
         dict_include: bool = True

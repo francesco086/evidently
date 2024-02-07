@@ -155,9 +155,8 @@ class DatasetSummaryMetric(Metric[DatasetSummaryMetricResult]):
 
 @default_renderer(wrap_type=DatasetSummaryMetric)
 class DatasetSummaryMetricRenderer(MetricRenderer):
-    @staticmethod
-    def _get_table(metric_result: DatasetSummaryMetricResult) -> BaseWidgetInfo:
-        column_names = ["Metric", "Current"]
+    def _get_table(self, metric_result: DatasetSummaryMetricResult) -> BaseWidgetInfo:
+        column_names = ["Metric", self._lbl_current]
         rows = (
             ["id column", metric_result.current.id_column],
             ["target column", metric_result.current.target],
@@ -186,7 +185,7 @@ class DatasetSummaryMetricRenderer(MetricRenderer):
             ],
         )
         if metric_result.reference is not None:
-            column_names.append("Reference")
+            column_names.append(self._lbl_reference)
             rows[0].append(metric_result.reference.id_column)
             rows[1].append(metric_result.reference.target)
             rows[2].append(metric_result.reference.prediction)

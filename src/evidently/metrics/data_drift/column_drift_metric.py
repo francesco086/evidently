@@ -49,6 +49,8 @@ def get_one_column_drift(
     data_definition: DataDefinition,
     column_type: ColumnType,
     agg_data: bool,
+    reference_label: str = "Reference",
+    current_label: str = "Current",
 ) -> ColumnDataDriftMetrics:
     if column_type not in (ColumnType.Numerical, ColumnType.Categorical, ColumnType.Text):
         raise ValueError(f"Cannot calculate drift metric for column '{column}' with type {column_type}")
@@ -75,14 +77,14 @@ def get_one_column_drift(
 
     if reference_column.empty:
         raise ValueError(
-            f"An empty column '{column.name}' was provided for drift calculation in the reference dataset."
+            f"An empty column '{column.name}' was provided for drift calculation in the {reference_label} dataset."
         )
 
     # clean and check the column in current dataset
     current_column = current_column.replace([-np.inf, np.inf], np.nan).dropna()
 
     if current_column.empty:
-        raise ValueError(f"An empty column '{column.name}' was provided for drift calculation in the current dataset.")
+        raise ValueError(f"An empty column '{column.name}' was provided for drift calculation in the {current_label} dataset.")
 
     current_distribution = None
     reference_distribution = None
@@ -98,10 +100,10 @@ def get_one_column_drift(
 
     if column_type == ColumnType.Numerical:
         if not pd.api.types.is_numeric_dtype(reference_column):
-            raise ValueError(f"Column '{column}' in reference dataset should contain numerical values only.")
+            raise ValueError(f"Column '{column}' in {reference_label} dataset should contain numerical values only.")
 
         if not pd.api.types.is_numeric_dtype(current_column):
-            raise ValueError(f"Column '{column}' in current dataset should contain numerical values only.")
+            raise ValueError(f"Column '{column}' in {current_label} dataset should contain numerical values only.")
 
     drift_test_function = get_stattest(reference_column, current_column, column_type, stattest)
     drift_result = drift_test_function(reference_column, current_column, column_type, threshold)
@@ -149,7 +151,7 @@ def get_one_column_drift(
                 column.name,
                 datetime_name,
             )
-            current_scatter["current (mean)"] = df
+            current_scatter[f"{current_label} (mean)"] = df
             if prefix is None:
                 x_name = "Index binned"
             else:
@@ -203,7 +205,7 @@ def get_one_column_drift(
             reference=reference_column,
         )
         if reference_distribution is None:
-            raise ValueError(f"Cannot calculate reference distribution for column '{column}'.")
+            raise ValueError(f"Cannot calculate {reference_label} distribution for column '{column}'.")
 
     elif column_type == ColumnType.Text and drift_result.drifted:
         (
@@ -248,6 +250,8 @@ def get_one_column_drift(
 
 class ColumnDriftMetric(ColumnMetric[ColumnDataDriftMetrics]):
     """Calculate drift metric for a column"""
+    _lbl_reference = "MyReferee"
+    _lbl_current = "MyCorrente"
 
     stattest: Optional[PossibleStatTestType]
     stattest_threshold: Optional[float]
@@ -299,6 +303,8 @@ class ColumnDriftMetric(ColumnMetric[ColumnDataDriftMetrics]):
             data_definition=data.data_definition,
             options=options,
             agg_data=agg_data,
+            reference_label=self._lbl_reference,
+            current_label=self._lbl_current,
         )
 
         return ColumnDataDriftMetrics(
@@ -340,6 +346,8 @@ class ColumnDriftMetricRenderer(MetricRenderer):
                     y_name=result.column_name,
                     x_name=result.scatter.x_name,
                     color_options=self.color_options,
+                    current_label=self._lbl_current,
+                    reference_label=self._lbl_reference,
                 )
             else:
                 scatter_fig = plot_agg_line_data(
@@ -352,7 +360,9 @@ class ColumnDriftMetricRenderer(MetricRenderer):
                     yaxis_name=f"{result.column_name} (mean +/- std)",
                     color_options=self.color_options,
                     return_json=False,
-                    line_name="reference (mean)",
+                    line_name=f"{self._lbl_reference} (mean)",
+                    current_label=self._lbl_current,
+                    reference_label=self._lbl_reference,
                 )
             tabs.append(TabData("DATA DRIFT", plotly_figure(title="", figure=scatter_fig)))
 
@@ -367,6 +377,8 @@ class ColumnDriftMetricRenderer(MetricRenderer):
                 color_options=self.color_options,
                 subplots=False,
                 to_json=False,
+                current_label=self._lbl_current,
+                reference_label=self._lbl_reference,
             )
             tabs.append(TabData("DATA DISTRIBUTION", plotly_figure(title="", figure=distr_fig)))
 

@@ -117,6 +117,8 @@ class DataDriftTable(WithDriftOptions[DataDriftTableResults]):
             dataset_columns=dataset_columns,
             columns=self.columns,
             agg_data=agg_data,
+            reference_label=self._lbl_reference,
+            current_label=self._lbl_current,
         )
         current_fi: Optional[Dict[str, float]] = None
         reference_fi: Optional[Dict[str, float]] = None
@@ -213,6 +215,8 @@ class DataDriftTableRenderer(MetricRenderer):
                         y_name=data.column_name,
                         x_name=data.scatter.x_name,
                         color_options=self.color_options,
+                        current_label=self._lbl_current,
+                        reference_label=self._lbl_reference,
                     )
                 else:
                     scatter_fig = plot_agg_line_data(
@@ -225,7 +229,9 @@ class DataDriftTableRenderer(MetricRenderer):
                         yaxis_name=f"{data.column_name} (mean +/- std)",
                         color_options=self.color_options,
                         return_json=False,
-                        line_name="reference (mean)",
+                        line_name=f"{self._lbl_reference} (mean)",
+                        current_label=self._lbl_current,
+                        reference_label=self._lbl_reference,
                     )
                 scatter = plotly_figure(title="", figure=scatter_fig)
                 details.with_part("DATA DRIFT", info=scatter)
@@ -239,6 +245,8 @@ class DataDriftTableRenderer(MetricRenderer):
                 color_options=self.color_options,
                 subplots=False,
                 to_json=False,
+                current_label=self._lbl_current,
+                reference_label=self._lbl_reference,
             )
             distribution = plotly_figure(title="", figure=fig)
             details.with_part("DATA DISTRIBUTION", info=distribution)
@@ -313,7 +321,7 @@ class DataDriftTableRenderer(MetricRenderer):
             table_columns.append(ColumnDefinition("Reference feature importance", "reference_feature_importance"))
         table_columns = table_columns + [
             ColumnDefinition(
-                "Reference Distribution",
+                f"{self._lbl_reference} Distribution",
                 "reference_distribution",
                 ColumnType.HISTOGRAM,
                 options={
@@ -323,7 +331,7 @@ class DataDriftTableRenderer(MetricRenderer):
                 },
             ),
             ColumnDefinition(
-                "Current Distribution",
+                f"{self._lbl_current} Distribution",
                 "current_distribution",
                 ColumnType.HISTOGRAM,
                 options={

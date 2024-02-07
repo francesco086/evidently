@@ -247,12 +247,12 @@ class RegressionTopErrorMetricRenderer(MetricRenderer):
         else:
             curr_contour = result.current_agg.contour
             ref_contour = result.reference_agg.contour if result.reference_agg is not None else None
-            fig = plot_top_error_contours(curr_contour, ref_contour, "Acual value", "Predicted value")
+            fig = plot_top_error_contours(curr_contour, ref_contour, "Acual value", "Predicted value", current_label=self._lbl_current, reference_label=self._lbl_reference)
             fig = json.loads(fig.to_json())
         res = [
             header_text(label="Error Bias Table"),
             counter(
-                title="Current: Mean Error per Group (+/- std)",
+                title=f"{self._lbl_current}: Mean Error per Group (+/- std)",
                 counters=[
                     CounterData(
                         "Majority(90%)",
@@ -272,7 +272,7 @@ class RegressionTopErrorMetricRenderer(MetricRenderer):
         if ref_mean_err_per_group is not None:
             res.append(
                 counter(
-                    title="Reference: Mean Error per Group (+/- std)",
+                    title=f"{self._lbl_reference}: Mean Error per Group (+/- std)",
                     counters=[
                         CounterData(
                             "Majority(90%)",

@@ -126,6 +126,8 @@ class TextDescriptorsDriftMetric(Metric[TextDescriptorsDriftMetricResults]):
                 options=self._drift_options,
                 dataset_columns=text_dataset_columns,
                 agg_data=agg_data,
+                reference_label=self._lbl_reference,
+                current_label=self._lbl_current,
             )
         dataset_drift = get_dataset_drift(drift_by_columns, 0)
 
@@ -164,6 +166,8 @@ class DataDriftTableRenderer(MetricRenderer):
                     y_name=data.column_name,
                     x_name=data.scatter.x_name,
                     color_options=self.color_options,
+                    current_label=self._lbl_current,
+                    reference_label=self._lbl_reference,
                 )
             else:
                 scatter_fig = plot_agg_line_data(
@@ -176,7 +180,9 @@ class DataDriftTableRenderer(MetricRenderer):
                     yaxis_name=f"{data.column_name} (mean +/- std)",
                     color_options=self.color_options,
                     return_json=False,
-                    line_name="reference (mean)",
+                    line_name=f"{self._lbl_reference} (mean)",
+                    current_label=self._lbl_current,
+                    reference_label=self._lbl_reference,
                 )
             scatter = plotly_figure(title="", figure=scatter_fig)
             details.with_part("DATA DRIFT", info=scatter)
@@ -190,6 +196,8 @@ class DataDriftTableRenderer(MetricRenderer):
                 color_options=self.color_options,
                 subplots=False,
                 to_json=False,
+                current_label=self._lbl_current,
+                reference_label=self._lbl_reference,
             )
             distribution = plotly_figure(title="", figure=fig)
             details.with_part("DATA DISTRIBUTION", info=distribution)

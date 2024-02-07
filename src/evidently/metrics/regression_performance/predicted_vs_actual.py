@@ -128,7 +128,7 @@ class RegressionPredictedVsActualScatterRenderer(MetricRenderer):
         ref_data: Optional[ContourData] = None
         if reference is not None:
             ref_data = reference.data
-        fig = plot_contour(current.data, ref_data, "Actual value", "Predicted value")
+        fig = plot_contour(current.data, ref_data, "Actual value", "Predicted value", current_label=self._lbl_current, reference_label=self._lbl_reference)
 
         return [header_text(label="Predicted vs Actual"), plotly_figure(title="", figure=fig, size=WidgetSize.FULL)]
 

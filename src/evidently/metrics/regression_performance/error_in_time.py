@@ -1,3 +1,4 @@
+import re
 from typing import List
 from typing import Optional
 from typing import Union
@@ -134,6 +135,8 @@ class RegressionErrorPlotRenderer(MetricRenderer):
                 xaxis_name_ref=result.x_name_ref,
                 yaxis_name="Error",
                 color_options=self.color_options,
+                current_label=self._lbl_current,
+                reference_label=self._lbl_reference,
             )
         return [
             header_text(label="Error (Predicted - Actual)"),

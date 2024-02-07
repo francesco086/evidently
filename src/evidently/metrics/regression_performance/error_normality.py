@@ -113,7 +113,7 @@ class RegressionErrorNormalityRenderer(MetricRenderer):
 
         if reference_plot is not None:
             cols = 2
-            subplot_titles = ["current", "reference"]
+            subplot_titles = [self._lbl_current, self._lbl_reference]
 
         fig = make_subplots(rows=1, cols=cols, shared_yaxes=False, subplot_titles=subplot_titles)
 

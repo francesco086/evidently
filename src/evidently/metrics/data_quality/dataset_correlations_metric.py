@@ -298,7 +298,7 @@ class DataQualityCorrelationMetricsRenderer(MetricRenderer):
             if metric_result.reference is not None:
                 ref_corr_result = metric_result.reference.correlation
                 reference_heatmap_data: Optional[HeatmapData] = HeatmapData(
-                    name="Reference", matrix=ref_corr_result[correlation_method]
+                    name=self._lbl_reference, matrix=ref_corr_result[correlation_method]
                 )
 
             else:
@@ -308,7 +308,7 @@ class DataQualityCorrelationMetricsRenderer(MetricRenderer):
                 TabData(
                     title=correlation_method,
                     widget=get_heatmaps_widget(
-                        primary_data=HeatmapData(name="Current", matrix=current_correlation),
+                        primary_data=HeatmapData(name=self._lbl_current, matrix=current_correlation),
                         secondary_data=reference_heatmap_data,
                         color_options=self.color_options,
                     ),

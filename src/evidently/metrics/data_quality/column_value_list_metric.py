@@ -157,7 +157,7 @@ class ColumnValueListMetricRenderer(MetricRenderer):
                 ),
             ),
         ]
-        return widget_tabs(title=f"{dataset_name.capitalize()} dataset", tabs=tabs)
+        return widget_tabs(title=f"{dataset_name.capitalize()} datasetDJ", tabs=tabs)
 
     @staticmethod
     def _get_count_info(stat: ValueListStat) -> str:

@@ -542,13 +542,15 @@ class ColumnSummaryMetricRenderer(MetricRenderer):
             metrics_values_headers = [""]
             if bins_for_hist.reference is not None:
                 hist_ref = bins_for_hist.reference
-                metrics_values_headers = ["current", "reference"]
+                metrics_values_headers = [self._lbl_current, self._lbl_reference]
 
             if column_type == "cat":
                 fig = plot_distr(
                     hist_curr=hist_curr,
                     hist_ref=hist_ref,
                     color_options=self.color_options,
+                    current_bar_name=self._lbl_current,
+                    reference_bar_name=self._lbl_reference,
                 )
                 fig.update_layout(legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1))
                 fig = json.loads(fig.to_json())
@@ -562,6 +564,8 @@ class ColumnSummaryMetricRenderer(MetricRenderer):
                     hist_ref,
                     ref_log,
                     color_options=self.color_options,
+                    current_bar_name=self._lbl_current,
+                    reference_bar_name=self._lbl_reference,
                 )
             elif column_type == "datetime":
                 fig = plot_time_feature_distr(hist_curr, hist_ref, color_options=self.color_options)
@@ -572,7 +576,7 @@ class ColumnSummaryMetricRenderer(MetricRenderer):
             graph = {}
             metrics_values_headers = [""]
             if metric_result.reference_characteristics is not None:
-                metrics_values_headers = ["current", "reference"]
+                metrics_values_headers = ["current2", "reference2"]
 
         # additional plots
         additional_graphs = []
@@ -628,8 +632,8 @@ class ColumnSummaryMetricRenderer(MetricRenderer):
                     warnings.warn(f"No box data for {column_name} x {target_name} in {self.__class__.__name__}")
                 else:
                     feature_by_target_figure = plot_boxes(
-                        metric_result.plot_data.data_by_target.box_data["current"],
-                        metric_result.plot_data.data_by_target.box_data.get("reference"),
+                        metric_result.plot_data.data_by_target.box_data["current3"],
+                        metric_result.plot_data.data_by_target.box_data.get("reference3"),
                         target_name,
                         column_name,
                         self.color_options,
@@ -637,25 +641,27 @@ class ColumnSummaryMetricRenderer(MetricRenderer):
             if column_type == "num" and target_type == "num":
                 if metric_result.plot_data.data_by_target.scatter_data is not None:
                     feature_by_target_figure = plot_num_num_rel(
-                        metric_result.plot_data.data_by_target.scatter_data["current"],
-                        metric_result.plot_data.data_by_target.scatter_data.get("reference"),
+                        metric_result.plot_data.data_by_target.scatter_data["curren4"],
+                        metric_result.plot_data.data_by_target.scatter_data.get("reference4"),
                         target_name,
                         column_name,
                         color_options=self.color_options,
                     )
                 elif metric_result.plot_data.data_by_target.contour_data is not None:
                     feature_by_target_figure = plot_contour(
-                        metric_result.plot_data.data_by_target.contour_data["current"],
-                        metric_result.plot_data.data_by_target.contour_data.get("reference"),
+                        metric_result.plot_data.data_by_target.contour_data["current5"],
+                        metric_result.plot_data.data_by_target.contour_data.get("reference5"),
                         column_name,
                         target_name,
+                        current_label=self._lbl_current,
+                        reference_label=self._lbl_reference,
                     )
                     feature_by_target_figure = json.loads(feature_by_target_figure.to_json())
             if column_type == "cat" and target_type == "cat":
                 if metric_result.plot_data.data_by_target.count_data is not None:
                     feature_by_target_figure = plot_cat_cat_rel(
-                        metric_result.plot_data.data_by_target.count_data["current"],
-                        metric_result.plot_data.data_by_target.count_data.get("reference"),
+                        metric_result.plot_data.data_by_target.count_data["current6"],
+                        metric_result.plot_data.data_by_target.count_data.get("reference6"),
                         target_name,
                         column_name,
                         color_options=self.color_options,

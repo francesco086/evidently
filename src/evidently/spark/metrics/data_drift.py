@@ -48,6 +48,8 @@ class SparkColumnDriftMetric(SparkMetricImplementation[ColumnDriftMetric]):
             datetime_column=datetime_column_name,
             data_definition=data.data_definition,
             options=options,
+            reference_label=self._lbl_reference,
+            current_label=self._lbl_current,
         )
 
         return ColumnDataDriftMetrics(
@@ -71,7 +73,7 @@ class SparkDataDriftTable(SparkMetricImplementation[DataDriftTable]):
 
         if self.metric.get_options().render_options.raw_data:
             raise NotImplementedError("SparkEngine do not support raw_data=True")
-
+        
         result = get_drift_for_columns(
             current_data=data.current_data,
             reference_data=data.reference_data,
@@ -79,6 +81,8 @@ class SparkDataDriftTable(SparkMetricImplementation[DataDriftTable]):
             data_definition=data.data_definition,
             column_mapping=data.column_mapping,
             columns=self.metric.columns,
+            reference_label=self._lbl_reference,
+            current_label=self._lbl_current,
         )
         return DataDriftTableResults(
             number_of_columns=result.number_of_columns,
@@ -103,6 +107,8 @@ class SparkDatasetDriftMetric(SparkMetricImplementation[DatasetDriftMetric]):
             data_definition=data.data_definition,
             column_mapping=data.column_mapping,
             columns=self.metric.columns,
+            reference_label=self._lbl_reference,
+            current_label=self._lbl_current,
         )
         return DatasetDriftMetricResults(
             drift_share=self.metric.drift_share,
