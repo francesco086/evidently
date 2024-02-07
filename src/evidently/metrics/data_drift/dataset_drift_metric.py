@@ -95,6 +95,8 @@ class DatasetDriftMetric(
             dataset_columns=dataset_columns,
             columns=self.columns,
             agg_data=True,
+            reference_label=self._lbl_reference,
+            current_label=self._lbl_current,
         )
         return DatasetDriftMetricResults(
             drift_share=self.drift_share,

@@ -126,6 +126,8 @@ class TextDescriptorsDriftMetric(Metric[TextDescriptorsDriftMetricResults]):
                 options=self._drift_options,
                 dataset_columns=text_dataset_columns,
                 agg_data=agg_data,
+                reference_label=self._lbl_reference,
+                current_label=self._lbl_current,
             )
         dataset_drift = get_dataset_drift(drift_by_columns, 0)
 

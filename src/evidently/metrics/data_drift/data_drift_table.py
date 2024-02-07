@@ -117,6 +117,8 @@ class DataDriftTable(WithDriftOptions[DataDriftTableResults]):
             dataset_columns=dataset_columns,
             columns=self.columns,
             agg_data=agg_data,
+            reference_label=self._lbl_reference,
+            current_label=self._lbl_current,
         )
         current_fi: Optional[Dict[str, float]] = None
         reference_fi: Optional[Dict[str, float]] = None

@@ -96,12 +96,14 @@ def get_one_column_drift(
     dataset_columns: DatasetColumns,
     column_type: Union[str, ColumnType] = None,
     agg_data: bool,
+    reference_label: str = "Reference",
+    current_label: str = "Current",
 ) -> ColumnDataDriftMetrics:
     if column_name not in current_data:
-        raise ValueError(f"Cannot find column '{column_name}' in current dataset")
+        raise ValueError(f"Cannot find column '{column_name}' in {current_label} dataset")
 
     if column_name not in reference_data:
-        raise ValueError(f"Cannot find column '{column_name}' in reference dataset")
+        raise ValueError(f"Cannot find column '{column_name}' in {reference_label} dataset")
 
     if isinstance(column_type, str):
         column_type = ColumnType(column_type)
@@ -133,14 +135,14 @@ def get_one_column_drift(
 
     if reference_column.empty:
         raise ValueError(
-            f"An empty column '{column_name}' was provided for drift calculation in the reference dataset."
+            f"An empty column '{column_name}' was provided for drift calculation in the {reference_label} dataset."
         )
 
     # clean and check the column in current dataset
     current_column = current_column.replace([-np.inf, np.inf], np.nan).dropna()
 
     if current_column.empty:
-        raise ValueError(f"An empty column '{column_name}' was provided for drift calculation in the current dataset.")
+        raise ValueError(f"An empty column '{column_name}' was provided for drift calculation in the {reference_label} dataset.")
 
     current_distribution = None
     reference_distribution = None
@@ -156,10 +158,10 @@ def get_one_column_drift(
 
     if column_type == ColumnType.Numerical:
         if not pd.api.types.is_numeric_dtype(reference_column):
-            raise ValueError(f"Column '{column_name}' in reference dataset should contain numerical values only.")
+            raise ValueError(f"Column '{column_name}' in {reference_label} dataset should contain numerical values only.")
 
         if not pd.api.types.is_numeric_dtype(current_column):
-            raise ValueError(f"Column '{column_name}' in current dataset should contain numerical values only.")
+            raise ValueError(f"Column '{column_name}' in {current_label} dataset should contain numerical values only.")
 
     drift_test_function = get_stattest(reference_column, current_column, column_type, stattest)
     drift_result = drift_test_function(reference_column, current_column, column_type, threshold)
@@ -210,7 +212,7 @@ def get_one_column_drift(
                 column_name,
                 datetime_column_name,
             )
-            current_scatter["current (mean) 1"] = df
+            current_scatter[f"{current_label} (mean) 1"] = df
             if prefix is None:
                 x_name = "Index binned"
             else:
@@ -288,7 +290,7 @@ def get_one_column_drift(
             reference=reference_column,
         )
         if reference_distribution is None:
-            raise ValueError(f"Cannot calculate reference distribution for column '{column_name}'.")
+            raise ValueError(f"Cannot calculate {reference_label} distribution for column '{column_name}'.")
 
     elif column_type == ColumnType.Text and drift_result.drifted:
         (
@@ -421,6 +423,8 @@ def get_drift_for_columns(
     drift_share_threshold: Optional[float] = None,
     columns: Optional[List[str]] = None,
     agg_data: bool,
+    reference_label: str = "reference",
+    current_label: str = "current",
 ) -> DatasetDriftMetrics:
     if columns is None:
         # ensure prediction column is a string - add label values for classification tasks
@@ -446,6 +450,8 @@ def get_drift_for_columns(
             options=data_drift_options,
             dataset_columns=dataset_columns,
             agg_data=agg_data,
+            reference_label=reference_label,
+            current_label=current_label,
         )
 
     dataset_drift = get_dataset_drift(drift_by_columns, drift_share_threshold)

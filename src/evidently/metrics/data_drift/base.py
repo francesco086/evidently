@@ -29,6 +29,9 @@ class WithDriftOptionsFields(FrozenBaseModel):
 
 
 class WithDriftOptions(WithDriftOptionsFields, Metric[T], Generic[T], abc.ABC):
+    _lbl_reference = "MyReferee"
+    _lbl_current = "MyCorrente"
+    
     _drift_options: DataDriftOptions
 
     @property
